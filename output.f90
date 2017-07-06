@@ -4,12 +4,17 @@ module output
 
  contains
 
- subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n)
+ subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n,t)
     integer, intent(in) :: n
+    real, intent(in) :: t
     real, dimension(:), intent(in) :: pos,vel,acc,mass,h,dens,u,pres
     integer :: i
+    character(len=20) :: filename
 
-    open(unit=1,file='output.dat',status='replace')
+    write(filename,'(A,F5.3,A)') 'output_',t,'.dat'
+    print*,filename
+
+    open(unit=1,file=filename,status='replace')
 
 
     do i=1,n

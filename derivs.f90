@@ -15,9 +15,11 @@ module derivs
     integer, intent(inout):: n_ghosts
 
     call get_density(pos,mass,h,dens,n,n_ghosts)
-    call place_ghosts(pos,vel,mass,h,dens,n,n_ghosts)
+    call place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
     call equationofstate(dens,c_s,pres)
+    call place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
     call get_accel(acc,pos,dens,mass,h,pres,n,n_ghosts)
+    call place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
  end subroutine get_derivs
 
 end module derivs

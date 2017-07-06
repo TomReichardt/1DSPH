@@ -35,9 +35,10 @@ module setup
     enddo
  end subroutine setup_wave
 
- subroutine place_ghosts(pos,vel,mass,h,dens,n,n_ghosts)
+ subroutine place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
     use toolkit, only:xmin,xmax
-    real, dimension(:), intent(inout) :: pos,vel,mass,h,dens
+    real, dimension(:), intent(inout) :: pos,vel,mass,h,dens,pres
+    !real, dimension(:), intent(inout), optional :: pres
     integer, intent(in) :: n
     integer, intent(out) :: n_ghosts
     integer :: i
@@ -52,6 +53,7 @@ module setup
           mass(n_ghosts + n) = mass(i)
           dens(n_ghosts + n) = dens(i)
           h(n_ghosts + n)    = h(i)
+          pres(n_ghosts + n) = pres(i)
 
        elseif (pos(i) <= xmin + 2 * h(i)) then
           n_ghosts = n_ghosts + 1
@@ -60,6 +62,7 @@ module setup
           mass(n_ghosts + n) = mass(i)
           dens(n_ghosts + n) = dens(i)
           h(n_ghosts + n)    = h(i)
+          pres(n_ghosts + n) = pres(i)
        endif
     enddo
 
