@@ -6,11 +6,11 @@ module setup
 
  contains
 
- subroutine setup_wave(pos,vel,mass,h,dens,xmin,xmax,n_max,n,c_s)
+ subroutine setup_wave(pos,vel,mass,h,dens,n,c_s)
+    use toolkit, only:xmin,xmax,n_max
     real, dimension(n_max), intent(out) :: pos,vel,mass,h,dens
-    real, intent(in) :: xmin,xmax,c_s
-    integer, intent(in):: n_max
     integer, intent(out) :: n
+    real, intent(in) :: c_s
     real, dimension(n_max) :: radian_pos
     real :: sep
     integer :: i
@@ -35,9 +35,9 @@ module setup
     enddo
  end subroutine setup_wave
 
- subroutine place_ghosts(pos,vel,mass,h,dens,xmin,xmax,n,n_ghosts)
+ subroutine place_ghosts(pos,vel,mass,h,dens,n,n_ghosts)
+    use toolkit, only:xmin,xmax
     real, dimension(:), intent(inout) :: pos,vel,mass,h,dens
-    real, intent(in) :: xmin,xmax
     integer, intent(in) :: n
     integer, intent(out) :: n_ghosts
     integer :: i
