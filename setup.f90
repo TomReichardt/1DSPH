@@ -38,7 +38,6 @@ module setup
  subroutine place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
     use toolkit, only:xmin,xmax
     real, dimension(:), intent(inout) :: pos,vel,mass,h,dens,pres
-    !real, dimension(:), intent(inout), optional :: pres
     integer, intent(in) :: n
     integer, intent(out) :: n_ghosts
     integer :: i
@@ -48,7 +47,7 @@ module setup
     do i=1,n
        if (pos(i) >= xmax - 2 * h(i)) then
           n_ghosts = n_ghosts + 1
-          pos(n_ghosts + n)  = pos(i) - xmax
+          pos(n_ghosts + n)  = pos(i) - xmax + xmin
           vel(n_ghosts + n)  = vel(i)
           mass(n_ghosts + n) = mass(i)
           dens(n_ghosts + n) = dens(i)
@@ -57,7 +56,7 @@ module setup
 
        elseif (pos(i) <= xmin + 2 * h(i)) then
           n_ghosts = n_ghosts + 1
-          pos(n_ghosts + n)  = pos(i) + xmax
+          pos(n_ghosts + n)  = pos(i) + xmax - xmin
           vel(n_ghosts + n)  = vel(i)
           mass(n_ghosts + n) = mass(i)
           dens(n_ghosts + n) = dens(i)

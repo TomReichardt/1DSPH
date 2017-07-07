@@ -2,8 +2,8 @@ module toolkit
 
  implicit none
 
- integer, parameter :: n_max = 120
- real, parameter :: xmax = 1., xmin = 0., c_s = 1., dt=0.01
+ integer, parameter :: n_max = 300
+ real, parameter :: xmax = 1., xmin = 0., c_s = 1., dt=0.001, h_fac=1.2
 
  contains
 

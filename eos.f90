@@ -4,12 +4,12 @@ module eos
 
  contains
 
- subroutine equationofstate(rho,c_s,pres)
-    real, dimension(:), intent(in) :: rho
+ subroutine equationofstate(dens,c_s,pres)
+    real, dimension(:), intent(in) :: dens
     real, intent(in) :: c_s
-    real, dimension(size(rho)), intent(out) :: pres
+    real, dimension(size(dens)), intent(out) :: pres
     
-    pres = rho * c_s**2
+    pres = dens * c_s**2
 
  end subroutine equationofstate
 
