@@ -3,15 +3,16 @@ module setup
  implicit none
 
  real, parameter :: pi=4*atan(1.)
-
+ real, parameter :: xmin = 0., xmax = 1.
  contains
 
- subroutine setup_wave(pos,vel,mass,h,dens,n,c_s)
-    use toolkit, only:xmin,xmax,n_max
+ subroutine setup_wave(pos,vel,mass,h,dens,n)
+    use toolkit, only:n_max
+    use eos, only:c_s
     real, dimension(n_max), intent(out) :: pos,vel,mass,h,dens
     integer, intent(out) :: n
-    real, intent(in) :: c_s
     real, dimension(n_max) :: radian_pos
+    real, parameter :: xmin = 0., xmax = 1.
     real :: sep
     integer :: i
 
@@ -28,7 +29,7 @@ module setup
 
        !Particle velocity
        radian_pos(i) = (pos(i) - xmin) * 2. * pi / (xmax - xmin)
-       vel(i) = sin(radian_pos(i)) * 1.e-4 * c_s
+       vel(i) = sin(radian_pos(i)) * 1.e-4 * c_s(0.,0.,2)
 
        !Particle smoothing length
        h(i) = 1.2 * sep    
@@ -36,7 +37,6 @@ module setup
  end subroutine setup_wave
 
  subroutine place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
-    use toolkit, only:xmin,xmax
     real, dimension(:), intent(inout) :: pos,vel,mass,h,dens,pres
     integer, intent(in) :: n
     integer, intent(out) :: n_ghosts
