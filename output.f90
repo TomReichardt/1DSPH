@@ -4,14 +4,13 @@ module output
 
  contains
 
- subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n,t)
-    integer, intent(in) :: n
-    real, intent(in) :: t
+ subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n,num)
+    integer, intent(in) :: n,num
     real, dimension(:), intent(in) :: pos,vel,acc,mass,h,dens,u,pres
     integer :: i
     character(len=20) :: filename
 
-    write(filename,'(A,F5.3,A)') 'dumps_',t,'.out'
+    write(filename,'(A,I5.5,A)') 'dumps_',num,'.out'
 
     open(unit=1,file=filename,status='replace')
 
