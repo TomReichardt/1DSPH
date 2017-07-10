@@ -4,8 +4,8 @@ module toolkit
 
  integer :: ibound = 1
  real, parameter :: h_fac=1.2
- real :: dt = 0.001
- integer, parameter :: n_max=1000, evwrite=2, maxsteps=5000, ieos=1
+ real :: dt = 0.001, maxtime=5
+ integer, parameter :: n_max=1000, evwrite=2, ieos=1
 
  contains
 

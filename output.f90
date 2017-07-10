@@ -23,24 +23,26 @@ module output
 
     close(1)
 
+    print*, 'Particles at t = ', t, ' written successfully to ', filename
+
   end subroutine write_out
 
- subroutine write_ev_out(vel,mass,n,t,i)
-    use toolkit, only:maxsteps,evwrite
+ subroutine write_ev_out(vel,mass,n,t)
+    use toolkit, only:maxtime,evwrite
     use energy, only:kinetic_energy
-    integer, intent(in) :: n, i
+    integer, intent(in) :: n
     real, intent(in) :: t
     real, dimension(:), intent(in) :: vel,mass
     character(len=20) :: filename
 
     write(filename,'(A)') 'energy.ev'
-    if (i == 0) then
+    if (t < tiny(t)) then
        open(unit=evwrite,file=filename,status='replace')
     endif
 
     write(evwrite,*) t, kinetic_energy(vel,mass,n)
 
-    if (i == maxsteps) then
+    if (t >= maxtime) then
        close(evwrite)
     endif
   end subroutine write_ev_out
