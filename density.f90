@@ -4,19 +4,19 @@ module density
 
  contains
 
- subroutine get_density(pos,mass,h,dens,n,n_ghosts)
+ subroutine get_density(pos,mass,h,dens,n,n_boundaries)
     use cubic, only: cubic_spline,rkern
     real, dimension(:), intent(in) :: pos,mass
     real, dimension(:), intent(inout) :: h
     real, dimension(:), intent(out) :: dens
-    integer, intent(in) :: n, n_ghosts
+    integer, intent(in) :: n, n_boundaries
     integer :: i,j
     real :: dx,q,w,dw
     
-    dens = 0.
+    dens(1:n) = 0.
     
     do i=1,n
-       do j=1,n + n_ghosts
+       do j=1,n + n_boundaries
           dx = abs(pos(i) - pos(j))
           q = dx/h(i)
           if (q < rkern) then
@@ -28,12 +28,13 @@ module density
 
  end subroutine get_density
 
- subroutine get_h(dens,mass,h)
+ subroutine get_h(dens,mass,h,n)
     use toolkit, only:h_fac
     real, dimension(:), intent(in) :: dens,mass
     real, dimension(:), intent(out) :: h
+    integer, intent(in) :: n
 
-    h = h_fac * (mass / dens)
+    h(1:n) = h_fac * (mass(1:n) / dens(1:n))
 
  end subroutine get_h
 
@@ -46,17 +47,17 @@ module density
 
  end subroutine get_h_i
 
- subroutine get_dens_h(pos,vel,mass,h,dens,pres,n,n_ghosts)
-    use setup, only:place_ghosts
-    real, dimension(:), intent(inout) :: pos,vel,mass,h,dens,pres
-    integer, intent(in) :: n
-    integer, intent(inout):: n_ghosts
+ subroutine get_dens_h(pos,vel,mass,h,dens,u,du,pres,n,n_boundaries)
+    use boundary, only:place_boundaries
+    real, dimension(:), intent(inout) :: pos,vel,mass,h,dens,u,du,pres
+    integer, intent(inout) :: n
+    integer, intent(inout):: n_boundaries
     integer :: i
 
     do i=1,3
-       call place_ghosts(pos,vel,mass,h,dens,pres,n,n_ghosts)
-       call get_density(pos,mass,h,dens,n,n_ghosts)
-       call get_h(dens,mass,h)
+       call place_boundaries(pos,vel,mass,h,dens,u,du,pres,n,n_boundaries)
+       call get_density(pos,mass,h,dens,n,n_boundaries)
+       call get_h(dens,mass,h,n)
     enddo
   end subroutine get_dens_h
 end module density

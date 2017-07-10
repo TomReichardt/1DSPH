@@ -2,9 +2,10 @@ module toolkit
 
  implicit none
 
+ integer :: ibound = 1
  real, parameter :: h_fac=1.2
  real :: dt = 0.001
- integer, parameter :: n_max=3000, evwrite=2, maxsteps=5000, ieos=2
+ integer, parameter :: n_max=1000, evwrite=2, maxsteps=5000, ieos=1
 
  contains
 
@@ -16,5 +17,16 @@ module toolkit
        r_hat = 0.
     endif
  end function r_hat
+
+ subroutine shuffle_array(x,n,m)
+    real, dimension(:), intent(inout) :: x
+    real, dimension(m+n) :: y
+    integer, intent(in) :: n,m
+
+    y(:m) = x(:m)
+    y(m+1:m+n) = x(1:n)
+    x(:m) = y(n+1:m+n)
+
+ end subroutine shuffle_array
 
 end module toolkit

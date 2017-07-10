@@ -4,7 +4,7 @@ module acceleration
 
  contains
 
- subroutine get_accel(pos,vel,acc,dens,mass,h,pres,n,n_ghosts,dt,opt_alpha,opt_beta)
+ subroutine get_accel(pos,vel,acc,dens,mass,h,du,pres,n,n_boundaries,dt,opt_alpha,opt_beta)
     use cubic, only:cubic_spline,rkern
     use toolkit, only:r_hat,ieos
     use viscosity, only:art_visc
@@ -12,8 +12,8 @@ module acceleration
     real, dimension(:), intent(in) :: pos,vel,dens,mass,h,pres
     real, intent(out) :: dt
     real, intent(in), optional :: opt_alpha,opt_beta
-    real, dimension(size(pos)), intent(out) :: acc 
-    integer, intent(in) :: n, n_ghosts
+    real, dimension(size(pos)), intent(out) :: acc,du
+    integer, intent(in) :: n, n_boundaries
     integer :: i,j
     real :: alpha,beta
     real :: dx,qi,qj,wi,wj,dwi,dwj,q_iij,q_jij
@@ -33,9 +33,10 @@ module acceleration
     endif
 
     acc = 0.
+    du = 0.
 
     do i=1,n
-       do j=1,n + n_ghosts 
+       do j=1,n + n_boundaries 
           dx = abs(pos(i) - pos(j))
           qi = dx/h(i)
           qj = dx/h(j)
@@ -46,6 +47,8 @@ module acceleration
              acc(i) = acc(i) - mass(j) *&
                       ((pres(i) + q_iij)/(dens(i)**2) * dwi * r_hat(pos(i),pos(j)) / (h(i)**2) +&
                        (pres(j) + q_jij)/(dens(j)**2) * dwj * r_hat(pos(i),pos(j)) / (h(j)**2))
+             du(i) = du(i) + mass(j) * (pres(i) + q_iij)/(dens(i)**2) *&
+                     (vel(i) - vel(j)) * dwi * r_hat(pos(i),pos(j)) / (h(i)**2)
              dt = min(dt,h(i)/c_s(dens(i),pres(i),ieos),h(j)/c_s(dens(j),pres(j),ieos))
           endif
        enddo

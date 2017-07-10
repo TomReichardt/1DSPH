@@ -4,9 +4,10 @@ module output
 
  contains
 
- subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n,num)
+ subroutine write_out(pos,vel,acc,mass,h,dens,u,pres,n,num,t)
     integer, intent(in) :: n,num
     real, dimension(:), intent(in) :: pos,vel,acc,mass,h,dens,u,pres
+    real, intent(in) :: t
     integer :: i
     character(len=20) :: filename
 
@@ -14,6 +15,7 @@ module output
 
     open(unit=1,file=filename,status='replace')
 
+    write(1,*) t
 
     do i=1,n
        write(1,*) pos(i),vel(i),acc(i),mass(i),h(i),dens(i),u(i),pres(i)
